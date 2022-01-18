@@ -2,3 +2,6 @@
 
 ## Project Description:
 Movie recommendation engine
+
+## Approach:
+
