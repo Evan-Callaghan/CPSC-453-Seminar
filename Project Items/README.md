@@ -1,7 +1,7 @@
 # Blockbuster Recommendation System Project
 
 ## Project Description:
-After the several features are engineered, we are ready to start implementing our first recommendation engine. The recommendation system relies on similarity, which can be measured with the Euclidean distance, cosine similarity or Manhattan distance, and transaction activity. 
+
 
 ## Algorithm Design:
 
