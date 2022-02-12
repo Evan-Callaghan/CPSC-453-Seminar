@@ -14,22 +14,17 @@ def recommender_main(blockbuster):
     blockbuster_movie = blockbuster_movie.sort_values('Languages').reset_index(drop = True)
     blockbuster_series = blockbuster_series.sort_values('Languages').reset_index(drop = True)
     
-#     ## Removing unnecessary variables for recommendation process
-#     blockbuster_movie_temp = blockbuster_movie.iloc[:, 14:62]
-#     blockbuster_series_temp = blockbuster_series.iloc[:, 14:62]
-    
     ## Calling the recommendation subsettor function
     final_movie_recommendations = recommendation_subsettor(blockbuster_movie)
     final_series_recommendations = recommendation_subsettor(blockbuster_series)
     
-#     ## Returning the final data
-#     blockbuster_movie = pd.concat([blockbuster_movie, final_movie_recommendations], axis = 1)
-#     blockbuster_series = pd.concat([blockbuster_series, final_series_recommendations], axis = 1)
+    ## Returning the final data
+    blockbuster_movie = pd.concat([blockbuster_movie, final_movie_recommendations], axis = 1)
+    blockbuster_series = pd.concat([blockbuster_series, final_series_recommendations], axis = 1)
     
-#     final_blockbuster = pd.concat([blockbuster_movie, blockbuster_series]).reset_index(drop = True)
+    final_blockbuster = pd.concat([blockbuster_movie, blockbuster_series]).reset_index(drop = True)
     
-    return final_movie_recommendations, final_series_recommendations
-    # return final_blockbuster
+    return final_blockbuster
     
     
     
@@ -46,20 +41,37 @@ def recommendation_subsettor(blockbuster):
     
     ## Recording all languages in the data set
     for i in range(0, n):
+        
         if np.isin(blockbuster.at[i, 'Languages'], languages, invert = True):
             languages.append(blockbuster.at[i, 'Languages'])
             languages.sort()
             
-    # ## Calling the recommendation system function
-    # for language in languages:
-    #     language_subset = blockbuster[blockbuster['Languages'] == language].reset_index(drop = True)
-    #     recommendations = get_recommendations(language_subset)
-    #     results = pd.concat([results, get_recommendations(language_subset)])
-    return languages 
-    # return results
+    ## Calling the recommendation system function
+    for language in languages:
+        
+        language_subset = blockbuster[blockbuster['Languages'] == language].reset_index(drop = True)
+        results = pd.concat([results, get_recommendations(language_subset)], ignore_index = True)
+    
+    return results
     
 
 
-# def get_recommendations(blockbuster_temps):
+def get_recommendations(blockbuster):
     
-#     ## FOR each item in blockbuster
+    ## Defining an empty data-frame for results
+    results = pd.DataFrame(columns = ['Rec_1', 'Rec_1_lang', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5'])
+    
+    ## Removing unnecessary variables for recommendation process
+    blockbuster_temp = blockbuster.iloc[:, 14:62]
+    
+    ## Computing the Euclidean distances for all observations
+    D = euclidean_distances(blockbuster_temp)
+    
+    ## Extracting the Top-5 recommendations for each item
+    for i in range(0, blockbuster_temp.shape[0]):
+        
+        top_5 = np.argsort(D[:, i])[1:6]
+        results.loc[i] = [blockbuster.loc[top_5[0], 'Title'], blockbuster.loc[top_5[0], 'Languages'], blockbuster.loc[top_5[1], 'Title'], blockbuster.loc[top_5[2], 'Title'], blockbuster.loc[top_5[3], 'Title'], blockbuster.loc[top_5[4], 'Title']]
+        
+        
+    return results
