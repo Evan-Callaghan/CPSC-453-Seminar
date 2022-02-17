@@ -58,10 +58,10 @@ def recommendation_subsettor(blockbuster):
 def get_recommendations(blockbuster):
     
     ## Defining an empty data-frame for results
-    results = pd.DataFrame(columns = ['Rec_1', 'Rec_1_lang', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5'])
+    results = pd.DataFrame(columns = ['Rec_1', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5'])
     
     ## Removing unnecessary variables for recommendation process
-    blockbuster_temp = blockbuster.iloc[:, 14:62]
+    blockbuster_temp = blockbuster.iloc[:, 11:]
     
     ## Computing the Euclidean distances for all observations
     D = euclidean_distances(blockbuster_temp)
@@ -70,7 +70,7 @@ def get_recommendations(blockbuster):
     for i in range(0, blockbuster_temp.shape[0]):
         
         top_5 = np.argsort(D[:, i])[1:6]
-        results.loc[i] = [blockbuster.loc[top_5[0], 'Title'], blockbuster.loc[top_5[0], 'Languages'], blockbuster.loc[top_5[1], 'Title'], blockbuster.loc[top_5[2], 'Title'], blockbuster.loc[top_5[3], 'Title'], blockbuster.loc[top_5[4], 'Title']]
+        results.loc[i] = [blockbuster.loc[top_5[0], 'Title'], blockbuster.loc[top_5[1], 'Title'], blockbuster.loc[top_5[2], 'Title'], blockbuster.loc[top_5[3], 'Title'], blockbuster.loc[top_5[4], 'Title']]
         
         
     return results
