@@ -59,10 +59,9 @@ def get_recommendations(blockbuster):
     
     ## Defining an empty data-frame for results
     results = pd.DataFrame(columns = ['Rec_1', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5'])
-    temp = pd.DataFrame(columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'])
     
     ## Removing unnecessary variables for recommendation process
-    blockbuster_temp = blockbuster.iloc[:, 11:]
+    blockbuster_temp = blockbuster.iloc[:, 12:]
     
     ## Computing the Euclidean distances for all observations
     D = euclidean_distances(blockbuster_temp)
@@ -72,11 +71,12 @@ def get_recommendations(blockbuster):
         
         top_10 = np.argsort(D[:, i])[1:11]
         
-        temp.loc[0] = top_10
-        temp.loc[1] = [blockbuster.loc[top_10[0], 'Popularity_Score'], blockbuster.loc[top_10[1], 'Popularity_Score'], blockbuster.loc[top_10[2], 'Popularity_Score'], blockbuster.loc[top_10[3], 'Popularity_Score'], blockbuster.loc[top_10[4], 'Popularity_Score'], blockbuster.loc[top_10[5], 'Popularity_Score'], blockbuster.loc[top_10[6], 'Popularity_Score'], blockbuster.loc[top_10[7], 'Popularity_Score'], blockbuster.loc[top_10[8], 'Popularity_Score'], blockbuster.loc[top_10[9], 'Popularity_Score']]
+        temp = pd.DataFrame(columns = ['Indices', 'Popularity'])
+        temp['Indices'] = top_10
+        temp['Popularity'] = [blockbuster.loc[top_10[0], 'Popularity_Score'], blockbuster.loc[top_10[1], 'Popularity_Score'], blockbuster.loc[top_10[2], 'Popularity_Score'], blockbuster.loc[top_10[3], 'Popularity_Score'], blockbuster.loc[top_10[4], 'Popularity_Score'], blockbuster.loc[top_10[5], 'Popularity_Score'], blockbuster.loc[top_10[6], 'Popularity_Score'], blockbuster.loc[top_10[7], 'Popularity_Score'], blockbuster.loc[top_10[8], 'Popularity_Score'], blockbuster.loc[top_10[9], 'Popularity_Score']]
         
-        temp = temp.sort_values(by = 1, axis = 1, ascending = False)
-        temp_index = temp.loc[0].tolist()
+        temp = temp.sort_values(by = 'Popularity', axis = 0, ascending = False)
+        temp_index = temp['Indices'].tolist()
         
         results.loc[i] = [blockbuster.loc[temp_index[0], 'Title'], blockbuster.loc[temp_index[1], 'Title'], blockbuster.loc[temp_index[2], 'Title'], blockbuster.loc[temp_index[3], 'Title'],  blockbuster.loc[temp_index[4], 'Title']]
         
