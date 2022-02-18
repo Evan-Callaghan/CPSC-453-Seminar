@@ -70,7 +70,6 @@ def get_recommendations(blockbuster):
     for i in range(0, blockbuster_temp.shape[0]):
         
         top_10 = np.argsort(D[:, i])[1:11]
-        
         temp = pd.DataFrame(columns = ['Indices', 'Popularity'])
         temp['Indices'] = top_10
         temp['Popularity'] = [blockbuster.loc[top_10[0], 'Popularity_Score'], blockbuster.loc[top_10[1], 'Popularity_Score'], blockbuster.loc[top_10[2], 'Popularity_Score'], blockbuster.loc[top_10[3], 'Popularity_Score'], blockbuster.loc[top_10[4], 'Popularity_Score'], blockbuster.loc[top_10[5], 'Popularity_Score'], blockbuster.loc[top_10[6], 'Popularity_Score'], blockbuster.loc[top_10[7], 'Popularity_Score'], blockbuster.loc[top_10[8], 'Popularity_Score'], blockbuster.loc[top_10[9], 'Popularity_Score']]
