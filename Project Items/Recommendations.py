@@ -36,7 +36,7 @@ def recommendation_subsettor(blockbuster):
     languages = []
     
     ## Defining an empty data-frame for results
-    results = pd.DataFrame(columns = ['Rec_1', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5', 'Rec_11', 'Rec_22', 'Rec_33', 'Rec_44', 'Rec_55'])
+    results = pd.DataFrame(columns = ['Rec_1', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5'])
     
     ## Recording all languages in the data set
     for i in range(0, n):
@@ -58,7 +58,8 @@ def recommendation_subsettor(blockbuster):
 def get_recommendations(blockbuster):
     
     ## Defining an empty data-frame for results
-    results = pd.DataFrame(columns = ['Rec_1', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5', 'Rec_11', 'Rec_22', 'Rec_33', 'Rec_44', 'Rec_55'])
+    results = pd.DataFrame(columns = ['Rec_1', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5'])
+    temp = pd.DataFrame(columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'])
     
     ## Removing unnecessary variables for recommendation process
     blockbuster_temp = blockbuster.iloc[:, 11:]
@@ -69,7 +70,14 @@ def get_recommendations(blockbuster):
     ## Extracting the Top-5 recommendations for each item
     for i in range(0, blockbuster_temp.shape[0]):
         
-        top_5 = np.argsort(D[:, i])[1:11]
-        results.loc[i] = [blockbuster.loc[top_5[0], 'Title'], blockbuster.loc[top_5[0], 'Popularity_Score'], blockbuster.loc[top_5[1], 'Title'], blockbuster.loc[top_5[1], 'Popularity_Score'], blockbuster.loc[top_5[2], 'Title'], blockbuster.loc[top_5[2], 'Popularity_Score'], blockbuster.loc[top_5[3], 'Title'], blockbuster.loc[top_5[3], 'Popularity_Score'], blockbuster.loc[top_5[4], 'Title'], blockbuster.loc[top_5[4], 'Popularity_Score']]
+        top_10 = np.argsort(D[:, i])[1:11]
+        
+        temp.loc[0] = top_10
+        temp.loc[1] = [blockbuster.loc[top_10[0], 'Popularity_Score'], blockbuster.loc[top_10[1], 'Popularity_Score'], blockbuster.loc[top_10[2], 'Popularity_Score'], blockbuster.loc[top_10[3], 'Popularity_Score'], blockbuster.loc[top_10[4], 'Popularity_Score'], blockbuster.loc[top_10[5], 'Popularity_Score'], blockbuster.loc[top_10[6], 'Popularity_Score'], blockbuster.loc[top_10[7], 'Popularity_Score'], blockbuster.loc[top_10[8], 'Popularity_Score'], blockbuster.loc[top_10[9], 'Popularity_Score']]
+        
+        temp = temp.sort_values(by = 1, axis = 1, ascending = False)
+        temp_index = temp.loc[0].tolist()
+        
+        results.loc[i] = [blockbuster.loc[temp_index[0], 'Title'], blockbuster.loc[temp_index[1], 'Title'], blockbuster.loc[temp_index[2], 'Title'], blockbuster.loc[temp_index[3], 'Title'],  blockbuster.loc[temp_index[4], 'Title']]
         
     return results
