@@ -11,10 +11,10 @@ Recommendations:
   FOR each item in blockbuster.csv
   
     IF the item is a movie
-      THEN return the five-nearest neighbors as the recommendations from a movie data subset;
+      THEN select the ten-nearest neighbors and return the five most popular as the recommendations from a movie data subset;
       
     ELSE (the item is a series)
-      THEN return the five-nearest neighbors as the recommendations from a series data subset;
+      THEN select the ten-nearest neighbors and return the five most popular as the recommendations from a series data subset;
     
     ENDIF;
   
