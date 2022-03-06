@@ -23,6 +23,19 @@ def recommender_main(blockbuster):
     
     final_blockbuster = pd.concat([blockbuster_movie, blockbuster_series]).reset_index(drop = True)
     
+    final_blockbuster = final_blockbuster[['Title', 'Genre', 'Languages', 'Series or Movie', 'View Rating', 'Netflix Link', 'IMDb Link', 'Summary', 'Image', 'Poster', 'Rec_1', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5']]
+    
+#     ## Changing the Genre variable to a list
+#     for i in range(0, final_blockbuster.shape[0]):
+#         final_blockbuster.at[i, 'Genre'] = final_blockbuster.replace("[", '')
+#         final_blockbuster.at[i, 'Genre'] = final_blockbuster.replace("'", '')
+#         final_blockbuster.at[i, 'Genre'] = final_blockbuster.replace(",", '')
+#         final_blockbuster.at[i, 'Genre'] = final_blockbuster.replace("]", '')
+#         final_blockbuster.at[i, 'Genre'] = final_blockbuster.at[i, 'Genre'].split()
+        
+    
+#     final_blockbuster = final_blockbuster.explode('Genre').reset_index(drop = True)
+    
     return final_blockbuster
     
     
