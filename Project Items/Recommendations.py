@@ -21,21 +21,16 @@ def recommender_main(blockbuster):
     blockbuster_movie = pd.concat([blockbuster_movie, final_movie_recommendations], axis = 1)
     blockbuster_series = pd.concat([blockbuster_series, final_series_recommendations], axis = 1)
     
+    ## Combining the movie and series data sets into one
     final_blockbuster = pd.concat([blockbuster_movie, blockbuster_series]).reset_index(drop = True)
     
-    final_blockbuster = final_blockbuster[['Title', 'Genre', 'Languages', 'Series or Movie', 'View Rating', 'Netflix Link', 'IMDb Link', 'Summary', 'Image', 'Poster', 'Rec_1', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5']]
+    ## Keeping only necessary variables
+    final_blockbuster = final_blockbuster[['Title', 'Genre', 'Languages', 'Series or Movie', 'View Rating', 'Popularity_Score', 'Netflix Link', 'IMDb Link', 'Summary', 'Image', 'Poster', 'Rec_1', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5']]
     
-#     ## Changing the Genre variable to a list
-#     for i in range(0, final_blockbuster.shape[0]):
-#         final_blockbuster.at[i, 'Genre'] = final_blockbuster.replace("[", '')
-#         final_blockbuster.at[i, 'Genre'] = final_blockbuster.replace("'", '')
-#         final_blockbuster.at[i, 'Genre'] = final_blockbuster.replace(",", '')
-#         final_blockbuster.at[i, 'Genre'] = final_blockbuster.replace("]", '')
-#         final_blockbuster.at[i, 'Genre'] = final_blockbuster.at[i, 'Genre'].split()
-        
+    ## Calling the final explode fucntion
+    #final_blockbuster = final_explode(final_blockbuster)
     
-#     final_blockbuster = final_blockbuster.explode('Genre').reset_index(drop = True)
-    
+    ## Returning the complete data set for user interface usage
     return final_blockbuster
     
     
@@ -92,4 +87,24 @@ def get_recommendations(blockbuster):
         
         results.loc[i] = [blockbuster.loc[temp_index[0], 'Title'], blockbuster.loc[temp_index[1], 'Title'], blockbuster.loc[temp_index[2], 'Title'], blockbuster.loc[temp_index[3], 'Title'],  blockbuster.loc[temp_index[4], 'Title']]
         
+    return results
+
+
+
+def final_explode(blockbuster):
+    
+    ## Changing the Genre variable to a list
+    for i in range(0, blockbuster.shape[0]):
+        
+        blockbuster.at[i, 'Genre'] = blockbuster.replace("[", '')
+        blockbuster.at[i, 'Genre'] = blockbuster.replace("'", '')
+        blockbuster.at[i, 'Genre'] = blockbuster.replace("]", '')
+        
+    for i in range(0, blockbuster.shape[0]):
+        
+        blockbuster.at[i, 'Genre'] = list(blockbuster.at[i, 'Genre'].split(", "))
+     
+    ## Using the explode function to get an observation for each genre
+    results = blockbuster.explode('Genre').reset_index(drop = True)
+    
     return results
