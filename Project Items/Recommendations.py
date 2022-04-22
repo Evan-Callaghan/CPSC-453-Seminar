@@ -5,6 +5,9 @@ from sklearn.metrics.pairwise import euclidean_distances
 
 def recommender_main(blockbuster):
     
+    ## Printing signal to indicate the algorithm has started:
+    print('-- Algorithm Starting --')
+    
     ## Changing the data type of the Genre variable
     for i in range(0, blockbuster.shape[0]):
         blockbuster.at[i, 'Genre'] = blockbuster.at[i, 'Genre'].replace("[", '')
@@ -28,15 +31,21 @@ def recommender_main(blockbuster):
     blockbuster_movie = pd.concat([blockbuster_movie, final_movie_recommendations], axis = 1)
     blockbuster_series = pd.concat([blockbuster_series, final_series_recommendations], axis = 1)
     
+    ## Printing signal to indicate recommendations have been completed:
+    print('\n-- Recommendations Completed --')
+    
     ## Calling the final explode fucntion
     blockbuster_movie = final_explode(blockbuster_movie)
-    blockbuster_series = blockbuster_series(blockbuster_movie)
+    blockbuster_series = final_explode(blockbuster_series)
     
     ## Combining the movie and series data sets into one
     final_blockbuster = pd.concat([blockbuster_movie, blockbuster_series]).reset_index(drop = True)
     
     ## Keeping only necessary variables
     final_blockbuster = final_blockbuster[['Title', 'Genre', 'Languages', 'Series or Movie', 'View Rating', 'Popularity_Score', 'Netflix Link', 'IMDb Link', 'Summary', 'Image', 'Poster', 'Rec_1', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5']]
+    
+    ## Printing signal to indicate the algorithm has finished:
+    print('\n-- Algorithm Finished --')
     
     ## Returning the complete data set for user interface usage
     return final_blockbuster
