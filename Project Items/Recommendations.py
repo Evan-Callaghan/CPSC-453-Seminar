@@ -5,6 +5,13 @@ from sklearn.metrics.pairwise import euclidean_distances
 
 def recommender_main(blockbuster):
     
+    ## Changing the data type of the Genre variable
+    for i in range(0, blockbuster.shape[0]):
+        blockbuster.at[i, 'Genre'] = blockbuster.at[i, 'Genre'].replace("[", '')
+        blockbuster.at[i, 'Genre'] = blockbuster.at[i, 'Genre'].replace("'", '')
+        blockbuster.at[i, 'Genre'] = blockbuster.at[i, 'Genre'].replace("]", '')
+        blockbuster.at[i, 'Genre'] = list(blockbuster.at[i, 'Genre'].split(", "))
+    
     ## Creating a movie and series subset
     blockbuster_movie = blockbuster[blockbuster['Series or Movie'] == 'Movie'].reset_index(drop = True)
     blockbuster_series = blockbuster[blockbuster['Series or Movie'] == 'Series'].reset_index(drop = True)
@@ -21,14 +28,15 @@ def recommender_main(blockbuster):
     blockbuster_movie = pd.concat([blockbuster_movie, final_movie_recommendations], axis = 1)
     blockbuster_series = pd.concat([blockbuster_series, final_series_recommendations], axis = 1)
     
+    ## Calling the final explode fucntion
+    blockbuster_movie = final_explode(blockbuster_movie)
+    blockbuster_series = blockbuster_series(blockbuster_movie)
+    
     ## Combining the movie and series data sets into one
     final_blockbuster = pd.concat([blockbuster_movie, blockbuster_series]).reset_index(drop = True)
     
     ## Keeping only necessary variables
     final_blockbuster = final_blockbuster[['Title', 'Genre', 'Languages', 'Series or Movie', 'View Rating', 'Popularity_Score', 'Netflix Link', 'IMDb Link', 'Summary', 'Image', 'Poster', 'Rec_1', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5']]
-    
-    ## Calling the final explode fucntion
-    #final_blockbuster = final_explode(final_blockbuster)
     
     ## Returning the complete data set for user interface usage
     return final_blockbuster
@@ -43,7 +51,7 @@ def recommendation_subsettor(blockbuster):
     ## Defining an empty list for results
     languages = []
     
-    ## Defining an empty data-frame for results
+    ## Defining an empty data-frame to store results
     results = pd.DataFrame(columns = ['Rec_1', 'Rec_2', 'Rec_3', 'Rec_4', 'Rec_5'])
     
     ## Recording all languages in the data set
@@ -93,18 +101,10 @@ def get_recommendations(blockbuster):
 
 def final_explode(blockbuster):
     
-    ## Changing the Genre variable to a list
-    for i in range(0, blockbuster.shape[0]):
-        
-        blockbuster.at[i, 'Genre'] = blockbuster.replace("[", '')
-        blockbuster.at[i, 'Genre'] = blockbuster.replace("'", '')
-        blockbuster.at[i, 'Genre'] = blockbuster.replace("]", '')
-        
-    for i in range(0, blockbuster.shape[0]):
-        
-        blockbuster.at[i, 'Genre'] = list(blockbuster.at[i, 'Genre'].split(", "))
-     
-    ## Using the explode function to get an observation for each genre
-    results = blockbuster.explode('Genre').reset_index(drop = True)
+    ## Using the explode function to get a unique observation for each genre
+    blockbuster_temp = blockbuster.explode('Genre').reset_index(drop = True)
+    
+    ## Removing observations with missing genres
+    results = blockbuster_temp[blockbuster_temp['Genre'] != 'nan'].reset_index(drop = True)
     
     return results
