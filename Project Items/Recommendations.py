@@ -1,3 +1,8 @@
+## Blockbuster Recommendation System Project
+
+## This .py file goes through the recommendation system algorithm and produces the top-five recommendations for every series and movie in the data set
+
+## Importing libraries
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import euclidean_distances
